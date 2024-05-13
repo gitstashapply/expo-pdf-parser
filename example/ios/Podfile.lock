@@ -7,6 +7,8 @@ PODS:
     - ExpoModulesCore
   - ExpoAsset (10.0.6):
     - ExpoModulesCore
+  - ExpoDocumentPicker (12.0.1):
+    - ExpoModulesCore
   - ExpoFileSystem (17.0.1):
     - ExpoModulesCore
   - ExpoFont (12.0.4):
@@ -1210,6 +1212,7 @@ DEPENDENCIES:
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - Expo (from `../node_modules/expo`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
+  - ExpoDocumentPicker (from `../node_modules/expo-document-picker/ios`)
   - ExpoFileSystem (from `../node_modules/expo-file-system/ios`)
   - ExpoFont (from `../node_modules/expo-font/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
@@ -1285,6 +1288,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
+  ExpoDocumentPicker:
+    :path: "../node_modules/expo-document-picker/ios"
   ExpoFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   ExpoFont:
@@ -1407,6 +1412,7 @@ SPEC CHECKSUMS:
   EXConstants: 9a008dbf262550884e6280dea95b81b51f65ea6f
   Expo: a615f2b4d9412683c7c63ce20b376a3ab0c8af83
   ExpoAsset: 9b7433ecc5f1b608ccbb823492e062bde944abd2
+  ExpoDocumentPicker: 326d1d098a574d621ed2cc05296c9895f10eea44
   ExpoFileSystem: 80bfe850b1f9922c16905822ecbf97acd711dc51
   ExpoFont: 331cf28d549edc7b6300d3be19302fc5069d9bb1
   ExpoKeepAwake: f3a7b0ff4b4911957264dad8cb584ef688326a22
