@@ -55,11 +55,29 @@ public class ExpoPdfTextModule: Module {
             }
         }
         
-        return extractedText.isEmpty ? nil : extractedText
+        return extractedText.isEmpty ? nil : self.cleanText(extractedText)
     }
 
     private func isWebURL(_ url: URL) -> Bool {
         return url.scheme?.lowercased() == "http" || url.scheme?.lowercased() == "https"
+    }
+    
+    private func cleanText(_ text: String) -> String {
+        var cleanedText = text
+        
+        // Remove references and citations (example format [1], [2], etc.)
+        cleanedText = cleanedText.replacingOccurrences(of: "\\[\\d+\\]", with: "", options: .regularExpression)
+        
+        // Remove unnecessary symbols (example symbols)
+        let symbolsToRemove = ["@", "#", "$", "%", "^", "&", "*", "(", ")", "=", "+", "[", "]", "{", "}", "<", ">", "/", "\\", "|"]
+        for symbol in symbolsToRemove {
+            cleanedText = cleanedText.replacingOccurrences(of: symbol, with: "")
+        }
+        
+        // Remove annotations (you can define more complex logic if needed)
+        cleanedText = cleanedText.replacingOccurrences(of: "(?<=\\().+?(?=\\))", with: "", options: .regularExpression)
+        
+        return cleanedText
     }
 
     private func downloadPDF(from url: URL, completion: @escaping (Result<URL, Error>) -> Void) {
