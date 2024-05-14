@@ -65,20 +65,45 @@ public class ExpoPdfTextModule: Module {
     private func cleanText(_ text: String) -> String {
         var cleanedText = text
         
-        // Remove references and citations (example format [1], [2], etc.)
+        // 1. Remove references and citations (example format [1], [2], etc.)
         cleanedText = cleanedText.replacingOccurrences(of: "\\[\\d+\\]", with: "", options: .regularExpression)
         
-        // Remove unnecessary symbols (example symbols)
-        let symbolsToRemove = ["@", "#", "$", "%", "^", "&", "*", "(", ")", "=", "+", "[", "]", "{", "}", "<", ">", "/", "\\", "|"]
+        // 2. Remove unnecessary symbols
+        let symbolsToRemove = ["@", "#", "$", "%", "^", "&", "*", "(", ")", "=", "+", "[", "]", "{", "}", "<", ">", "/", "\\", "|", "~", "`"]
         for symbol in symbolsToRemove {
             cleanedText = cleanedText.replacingOccurrences(of: symbol, with: "")
         }
         
-        // Remove annotations (you can define more complex logic if needed)
-        cleanedText = cleanedText.replacingOccurrences(of: "(?<=\\().+?(?=\\))", with: "", options: .regularExpression)
+        // 3. Remove annotations (parenthetical information)
+        cleanedText = cleanedText.replacingOccurrences(of: "\\(.*?\\)", with: "", options: .regularExpression)
+        
+        // 4. Remove headers and footers (common patterns)
+        cleanedText = cleanedText.replacingOccurrences(of: "(?i)(header text|footer text|page \\d+|date|confidential|author)", with: "", options: .regularExpression)
+        
+        // 5. Remove section headers and other metadata (common section headers)
+//        let sectionHeaders = ["introduction", "methods", "results", "discussion", "conclusion", "acknowledgements", "references", "abstract", "background", "objective", "materials and methods", "tables?", "figures?", "appendix"]
+//        for header in sectionHeaders {
+//            cleanedText = cleanedText.replacingOccurrences(of: "(?i)\\b" + header + "\\b", with: "", options: .regularExpression)
+//        }
+        
+        // 6. Remove figure references (e.g., "Fig. 1", "Extended Data Fig. 1", etc.)
+        cleanedText = cleanedText.replacingOccurrences(of: "(?i)fig\\. \\d+", with: "", options: .regularExpression)
+        cleanedText = cleanedText.replacingOccurrences(of: "(?i)extended data fig\\. \\d+", with: "", options: .regularExpression)
+        
+        // 7. Remove web links
+        cleanedText = cleanedText.replacingOccurrences(of: "http[s]?://\\S+", with: "", options: .regularExpression)
+        
+        // 8. Additional cleaning steps based on specific content
+        // Clean author and affiliation lines
+        cleanedText = cleanedText.replacingOccurrences(of: "\\s+\\d+\\s\\w+\\s.+,\\s\\w+", with: "", options: .regularExpression)
+        cleanedText = cleanedText.replacingOccurrences(of: "e-mail:.*", with: "", options: .regularExpression)
+        
+        // 9. Remove any remaining multiple newlines
+        cleanedText = cleanedText.replacingOccurrences(of: "\n{2,}", with: "\n", options: .regularExpression)
         
         return cleanedText
     }
+
 
     private func downloadPDF(from url: URL, completion: @escaping (Result<URL, Error>) -> Void) {
         let downloadTask = URLSession.shared.downloadTask(with: url) { localURL, urlResponse, error in
