@@ -80,19 +80,9 @@ public class ExpoPdfTextModule: Module {
         // 4. Remove headers and footers (common patterns)
         cleanedText = cleanedText.replacingOccurrences(of: "(?i)(header text|footer text|page \\d+|date|confidential|author)", with: "", options: .regularExpression)
         
-        // 5. Remove section headers and other metadata (common section headers)
-//        let sectionHeaders = ["introduction", "methods", "results", "discussion", "conclusion", "acknowledgements", "references", "abstract", "background", "objective", "materials and methods", "tables?", "figures?", "appendix"]
-//        for header in sectionHeaders {
-//            cleanedText = cleanedText.replacingOccurrences(of: "(?i)\\b" + header + "\\b", with: "", options: .regularExpression)
-//        }
-        
-        // 6. Remove figure references (e.g., "Fig. 1", "Extended Data Fig. 1", etc.)
-        cleanedText = cleanedText.replacingOccurrences(of: "(?i)fig\\. \\d+", with: "", options: .regularExpression)
-        cleanedText = cleanedText.replacingOccurrences(of: "(?i)extended data fig\\. \\d+", with: "", options: .regularExpression)
-        
         // 7. Remove web links
-        cleanedText = cleanedText.replacingOccurrences(of: "http[s]?://\\S+", with: "", options: .regularExpression)
-        
+        cleanedText = self.removeHTTPLinks(from: cleanedText)
+
         // 8. Additional cleaning steps based on specific content
         // Clean author and affiliation lines
         cleanedText = cleanedText.replacingOccurrences(of: "\\s+\\d+\\s\\w+\\s.+,\\s\\w+", with: "", options: .regularExpression)
@@ -102,6 +92,21 @@ public class ExpoPdfTextModule: Module {
         cleanedText = cleanedText.replacingOccurrences(of: "\n{2,}", with: "\n", options: .regularExpression)
         
         return cleanedText
+    }
+    
+    private func removeHTTPLinks(from text: String) -> String {
+        // Define the regular expression pattern for HTTP links
+        let pattern = "http[s]?:[^\\s]+"
+        
+        // Create a regular expression object
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else {
+            return text
+        }
+        
+        // Replace matches with an empty string
+        let modifiedText = regex.stringByReplacingMatches(in: text, options: [], range: NSRange(location: 0, length: text.count), withTemplate: "")
+        
+        return modifiedText
     }
 
 
